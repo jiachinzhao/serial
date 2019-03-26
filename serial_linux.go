@@ -137,7 +137,7 @@ type Port struct {
 func (p *Port) SetReadTimeout(timeout time.Duration)(err error){
 	fd := p.f.Fd()
 
-	vmin, vtime := posixTimeoutValues(readTimeout)
+	vmin, vtime := posixTimeoutValues(timeout)
 	p.t.Cc[unix.VMIN] = vmin
 	p.t.Cc[unix.VTIME] = vtime
 
