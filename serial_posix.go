@@ -183,9 +183,9 @@ func (p *Port)SetReadTimeout(timeout time.Duration)(err error){
 	p.st.c_cc[C.VMIN] = C.cc_t(vmin)
 	p.st.c_cc[C.VTIME] = C.cc_t(vtime)
 
-	_, err = C.tcsetattr(p.f.Fd(), C.TCSANOW, &p.st)
+	_, err = C.tcsetattr(C.int(f.Fd()), C.TCSANOW, &p.st)
 	if err != nil {
-		f.Close()
+		p.f.Close()
 		return err
 	}
 
@@ -196,7 +196,7 @@ func (p *Port)SetReadTimeout(timeout time.Duration)(err error){
 		uintptr(0))
 	if e != 0 || r1 != 0 {
 		s := fmt.Sprint("Clearing NONBLOCK syscall error:", e, r1)
-		f.Close()
+		p.f.Close()
 		return errors.New(s)
 	}
 	return nil
